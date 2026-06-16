@@ -1,4 +1,4 @@
-const API_BASE = 'https://autograd-f335.vercel.app/';
+const API_BASE = 'https://autograd-f335.vercel.app';
 
 /* ── Мобильная навигация ────────────────────────────────────── */
 function toggleNav() {

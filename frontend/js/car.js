@@ -28,12 +28,10 @@ function renderCar(car) {
     document.getElementById('car-loader').style.display = 'none';
     document.getElementById('car-detail').style.display = 'block';
 
-    const fallbackImg = `https://placehold.co/800x500/1a1a2e/4f6ef7?text=${encodeURIComponent(car.brand)}`;
-
     document.title = `${car.brand} ${car.model} — АвтоГрад`;
-    document.getElementById('car-image').src = car.image_url || fallbackImg;
-    document.getElementById('car-image').alt = `${car.brand} ${car.model}`;
-    document.getElementById('car-image').onerror = function() { this.src = fallbackImg; };
+    const carImage = document.getElementById('car-image');
+    carImage.alt = `${car.brand} ${car.model}`;
+    setCarImage(carImage, car.image_url, car.brand);
     document.getElementById('car-title').textContent = `${car.brand} ${car.model}`;
     document.getElementById('car-year').textContent = `${car.year} год`;
     document.getElementById('car-price').textContent = formatPrice(car.price);

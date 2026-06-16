@@ -1,11 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import Response
+from urllib.parse import urlparse
 import os
+import urllib.request
 
 from database import engine, Base
 from models import Car, Client, Sale
 from routers import cars, clients, sales
+
+ALLOWED_IMAGE_HOSTS = frozenset({
+    "images.unsplash.com",
+    "plus.unsplash.com",
+    "placehold.co",
+})
 
 Base.metadata.create_all(bind=engine)
 
@@ -35,6 +44,28 @@ if os.path.isdir(frontend_path):
 @app.get("/", tags=["Главная"])
 def root():
     return {"message": "АвтоГрад API работает", "docs": "/docs"}
+
+
+@app.get("/image-proxy", tags=["Главная"])
+def image_proxy(url: str = Query(..., max_length=500)):
+    """Прокси для внешних изображений (обход блокировок CDN в браузере)."""
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname not in ALLOWED_IMAGE_HOSTS:
+        raise HTTPException(status_code=400, detail="Недопустимый URL изображения")
+
+    req = urllib.request.Request(url, headers={"User-Agent": "AutoGrad/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            content = resp.read()
+            content_type = resp.headers.get("Content-Type", "image/jpeg")
+    except Exception:
+        raise HTTPException(status_code=502, detail="Не удалось загрузить изображение")
+
+    return Response(
+        content=content,
+        media_type=content_type,
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
 
 
 @app.on_event("startup")

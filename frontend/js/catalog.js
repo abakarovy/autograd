@@ -81,28 +81,39 @@ function createCarCard(car, index) {
     card.style.animationDelay = `${index * 0.08}s`;
 
     const isNew = car.mileage === 0;
-    const fallbackImg = `https://placehold.co/800x500/1a1a2e/4f6ef7?text=${encodeURIComponent(car.brand)}`;
 
-    card.innerHTML = `
-        <div class="car-card-image-wrapper">
-            <img class="car-card-image" src="${car.image_url || fallbackImg}" alt="${car.brand} ${car.model}"
-                 onerror="this.src='${fallbackImg}'">
-            <span class="car-card-badge ${isNew ? 'new' : 'used'}">${isNew ? 'Новый' : 'С пробегом'}</span>
+    const wrapper = document.createElement('div');
+    wrapper.className = 'car-card-image-wrapper';
+
+    const img = document.createElement('img');
+    img.className = 'car-card-image';
+    img.alt = `${car.brand} ${car.model}`;
+    setCarImage(img, car.image_url, car.brand);
+    wrapper.appendChild(img);
+
+    const badge = document.createElement('span');
+    badge.className = `car-card-badge ${isNew ? 'new' : 'used'}`;
+    badge.textContent = isNew ? 'Новый' : 'С пробегом';
+    wrapper.appendChild(badge);
+
+    const body = document.createElement('div');
+    body.className = 'car-card-body';
+    body.innerHTML = `
+        <div class="car-card-title">${car.brand} ${car.model}</div>
+        <div class="car-card-year">${car.year} год</div>
+        <div class="car-card-specs">
+            <span class="car-card-spec">⛽ ${car.fuel_type}</span>
+            <span class="car-card-spec">⚙ ${car.transmission}</span>
+            <span class="car-card-spec">🚙 ${car.body_type}</span>
         </div>
-        <div class="car-card-body">
-            <div class="car-card-title">${car.brand} ${car.model}</div>
-            <div class="car-card-year">${car.year} год</div>
-            <div class="car-card-specs">
-                <span class="car-card-spec">⛽ ${car.fuel_type}</span>
-                <span class="car-card-spec">⚙ ${car.transmission}</span>
-                <span class="car-card-spec">🚙 ${car.body_type}</span>
-            </div>
-            <div class="car-card-footer">
-                <div class="car-card-price">${formatPrice(car.price)}</div>
-                <a href="car.html?id=${car.id}" class="btn btn-primary btn-sm">Подробнее</a>
-            </div>
+        <div class="car-card-footer">
+            <div class="car-card-price">${formatPrice(car.price)}</div>
+            <a href="car.html?id=${car.id}" class="btn btn-primary btn-sm">Подробнее</a>
         </div>
     `;
+
+    card.appendChild(wrapper);
+    card.appendChild(body);
 
     return card;
 }

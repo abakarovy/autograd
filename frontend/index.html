@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоГрад — Премиальный автосалон</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Навигация -->
+<nav class="navbar">
+    <div class="container">
+        <a href="index.html" class="logo">Авто<span>Град</span></a>
+        <button class="nav-toggle" onclick="toggleNav()">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Главная</a></li>
+            <li><a href="catalog.html">Каталог</a></li>
+            <li><a href="admin.html">Панель управления</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero-секция -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-badge">Автосалон №1 в городе</div>
+            <h1>
+                Найдите автомобиль<br>
+                <span class="gradient-text">вашей мечты</span>
+            </h1>
+            <p>
+                АвтоГрад — премиальный автосалон с широким выбором новых
+                и проверенных автомобилей. Гарантия качества и прозрачные условия сделки.
+            </p>
+            <div class="hero-buttons">
+                <a href="catalog.html" class="btn btn-primary">
+                    Смотреть каталог
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <a href="#features" class="btn btn-outline">О нас</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Преимущества -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>Почему выбирают <span class="gradient-text">АвтоГрад</span></h2>
+            <p>Мы обеспечиваем лучший сервис и прозрачные условия для каждого клиента</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Широкий выбор</h3>
+                <p>Более 100 автомобилей в наличии — от бюджетных до премиальных моделей ведущих мировых брендов.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✅</div>
+                <h3>Проверенное качество</h3>
+                <p>Каждый автомобиль проходит многоточечную проверку. Полная юридическая чистота и техническая исправность.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Лучшие цены</h3>
+                <p>Конкурентные цены и гибкие условия. Кредит и trade-in. Без скрытых комиссий и переплат.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>Быстрое оформление</h3>
+                <p>Оформление сделки за 1 день. Помощь с документами, страховкой и регистрацией в ГИБДД.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Сервис и гарантия</h3>
+                <p>Гарантия до 3 лет на все автомобили. Собственный сервисный центр с сертифицированными мастерами.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Индивидуальный подход</h3>
+                <p>Персональный менеджер для каждого клиента. Подберём автомобиль под ваши задачи и бюджет.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Статистика -->
+<section class="section">
+    <div class="container">
+        <div class="features-grid" style="text-align:center">
+            <div class="feature-card">
+                <h3 style="font-size:2.5rem;margin-bottom:8px" class="gradient-text" id="stat-cars">120+</h3>
+                <p>Автомобилей в наличии</p>
+            </div>
+            <div class="feature-card">
+                <h3 style="font-size:2.5rem;margin-bottom:8px" class="gradient-text">8 500+</h3>
+                <p>Довольных клиентов</p>
+            </div>
+            <div class="feature-card">
+                <h3 style="font-size:2.5rem;margin-bottom:8px" class="gradient-text">12</h3>
+                <p>Лет на рынке</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <span class="logo">Авто<span>Град</span></span>
+                <p>Премиальный автосалон с 2014 года. Надёжность, качество и лучший сервис для каждого клиента.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Навигация</h4>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="admin.html">Управление</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <ul>
+                    <li><a href="tel:+78001234567">8 (800) 123-45-67</a></li>
+                    <li><a href="mailto:info@autograd.ru">info@autograd.ru</a></li>
+                    <li><a href="#">г. Москва, ул. Автомобильная, 1</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Режим работы</h4>
+                <ul>
+                    <li>Пн-Пт: 9:00 — 21:00</li>
+                    <li>Сб: 10:00 — 20:00</li>
+                    <li>Вс: 10:00 — 18:00</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024—2026 АвтоГрад. Все права защищены. Дипломный проект.
+        </div>
+    </div>
+</footer>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

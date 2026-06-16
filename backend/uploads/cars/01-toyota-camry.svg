@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="40"/></filter>
+  </defs>
+  <rect width="1200" height="720" fill="url(#bg)"/>
+  <circle cx="930" cy="120" r="180" fill="#2563eb" opacity="0.18" filter="url(#blur)"/>
+  <circle cx="250" cy="610" r="160" fill="#60a5fa" opacity="0.12" filter="url(#blur)"/>
+  <rect x="70" y="70" width="1060" height="580" rx="36" fill="none" stroke="rgba(255,255,255,0.12)"/>
+  <text x="95" y="135" fill="white" font-size="34" font-family="Arial, Helvetica, sans-serif" opacity="0.9">Toyota</text>
+  <text x="95" y="188" fill="white" font-size="62" font-weight="700" font-family="Arial, Helvetica, sans-serif">Camry</text>
+  <text x="95" y="235" fill="#60a5fa" font-size="24" font-family="Arial, Helvetica, sans-serif" opacity="0.95">2024 model</text>
+  <g transform="translate(120 220)">
+    <path d="M110 230 L190 130 C210 104 238 88 271 88 H522 C569 88 604 101 636 133 L726 230 H821 C867 230 900 265 900 311 V346 H855
+             C845 393 807 427 761 427 C714 427 676 393 666 346 H340 C330 393 292 427 245 427 C199 427 161 393 151 346 H110 V230 Z"
+          fill="url(#accent)" opacity="0.97"/>
+    <path d="M255 137 H507 C548 137 579 145 608 169 L673 223 H193 L255 137 Z" fill="#dbeafe" opacity="0.92"/>
+    <rect x="292" y="157" width="132" height="54" rx="12" fill="#0f172a" opacity="0.55"/>
+    <rect x="444" y="157" width="168" height="54" rx="12" fill="#0f172a" opacity="0.55"/>
+    <circle cx="245" cy="346" r="62" fill="#0f172a"/>
+    <circle cx="245" cy="346" r="32" fill="#cbd5e1"/>
+    <circle cx="761" cy="346" r="62" fill="#0f172a"/>
+    <circle cx="761" cy="346" r="32" fill="#cbd5e1"/>
+    <rect x="132" y="246" width="70" height="20" rx="10" fill="#f8fafc" opacity="0.75"/>
+    <rect x="800" y="246" width="70" height="20" rx="10" fill="#fde68a" opacity="0.95"/>
+  </g>
+  <text x="96" y="610" fill="white" font-size="26" font-family="Arial, Helvetica, sans-serif" opacity="0.62">AutoGrad local media</text>
+  <text x="96" y="644" fill="white" font-size="22" font-family="Arial, Helvetica, sans-serif" opacity="0.35">Toyota Camry</text>
+</svg>

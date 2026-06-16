@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply min-h-screen bg-ink-950 text-zinc-100 antialiased;
+  background-image: theme(backgroundImage.hero-mesh), theme(backgroundImage.grid-faint);
+  background-size: auto, theme(backgroundSize.grid);
+  background-position: center top, center top;
+}
+
+::selection {
+  @apply bg-accent/30 text-white;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Focus rings — crisp accessibility */
+:focus-visible {
+  @apply outline-none ring-2 ring-accent/80 ring-offset-2 ring-offset-ink-950;
+}

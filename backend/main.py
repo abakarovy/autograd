@@ -1,22 +1,18 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import Response
-from urllib.parse import urlparse
 import os
-import urllib.request
 
 from database import engine, Base
 from models import Car, Client, Sale
 from routers import cars, clients, sales
-
-ALLOWED_IMAGE_HOSTS = frozenset({
-    "images.unsplash.com",
-    "plus.unsplash.com",
-    "placehold.co",
-})
+from routers import upload as upload_router
 
 Base.metadata.create_all(bind=engine)
+
+_BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+_UPLOADS_ROOT = os.path.join(_BACKEND_DIR, "uploads")
+os.makedirs(os.path.join(_UPLOADS_ROOT, "cars"), exist_ok=True)
 
 app = FastAPI(
     title="АвтоГрад API",
@@ -35,6 +31,9 @@ app.add_middleware(
 app.include_router(cars.router)
 app.include_router(clients.router)
 app.include_router(sales.router)
+app.include_router(upload_router.router)
+
+app.mount("/media", StaticFiles(directory=_UPLOADS_ROOT), name="media")
 
 frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend")
 if os.path.isdir(frontend_path):
@@ -44,28 +43,6 @@ if os.path.isdir(frontend_path):
 @app.get("/", tags=["Главная"])
 def root():
     return {"message": "АвтоГрад API работает", "docs": "/docs"}
-
-
-@app.get("/image-proxy", tags=["Главная"])
-def image_proxy(url: str = Query(..., max_length=500)):
-    """Прокси для внешних изображений (обход блокировок CDN в браузере)."""
-    parsed = urlparse(url)
-    if parsed.scheme != "https" or parsed.hostname not in ALLOWED_IMAGE_HOSTS:
-        raise HTTPException(status_code=400, detail="Недопустимый URL изображения")
-
-    req = urllib.request.Request(url, headers={"User-Agent": "AutoGrad/1.0"})
-    try:
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            content = resp.read()
-            content_type = resp.headers.get("Content-Type", "image/jpeg")
-    except Exception:
-        raise HTTPException(status_code=502, detail="Не удалось загрузить изображение")
-
-    return Response(
-        content=content,
-        media_type=content_type,
-        headers={"Cache-Control": "public, max-age=86400"},
-    )
 
 
 @app.on_event("startup")
@@ -83,84 +60,84 @@ def seed_demo_data():
                 mileage=0, fuel_type="Бензин", transmission="Автомат",
                 body_type="Седан", color="Белый", engine_volume=2.5,
                 description="Новый Toyota Camry 2024 — комфорт и надёжность. Полный пакет безопасности Toyota Safety Sense.",
-                image_url="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800",
+                image_url="/media/cars/01-toyota-camry.png",
             ),
             Car(
                 brand="BMW", model="X5", year=2023, price=7_500_000,
                 mileage=12000, fuel_type="Дизель", transmission="Автомат",
                 body_type="Внедорожник", color="Чёрный", engine_volume=3.0,
                 description="BMW X5 — премиальный внедорожник с мощным дизельным двигателем и адаптивной пневмоподвеской.",
-                image_url="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800",
+                image_url="/media/cars/02-bmw-x5.jpg",
             ),
             Car(
                 brand="Mercedes-Benz", model="E-Class", year=2024, price=6_800_000,
                 mileage=0, fuel_type="Бензин", transmission="Автомат",
                 body_type="Седан", color="Серебристый", engine_volume=2.0,
                 description="Mercedes-Benz E-Class — элегантность и технологии. Система MBUX нового поколения.",
-                image_url="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800",
+                image_url="/media/cars/03-mercedes-benz-e-class.jpg",
             ),
             Car(
                 brand="Audi", model="A6", year=2023, price=5_400_000,
                 mileage=8000, fuel_type="Бензин", transmission="Автомат",
                 body_type="Седан", color="Синий", engine_volume=2.0,
                 description="Audi A6 — сочетание спортивного характера и бизнес-класса. Quattro полный привод.",
-                image_url="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800",
+                image_url="/media/cars/04-audi-a6.jpg",
             ),
             Car(
                 brand="Kia", model="K5", year=2024, price=2_600_000,
                 mileage=0, fuel_type="Бензин", transmission="Автомат",
                 body_type="Седан", color="Красный", engine_volume=2.5,
                 description="Kia K5 — стильный дизайн и передовые технологии по доступной цене.",
-                image_url="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800",
+                image_url="/media/cars/05-kia-k5.jpg",
             ),
             Car(
                 brand="Hyundai", model="Tucson", year=2024, price=3_100_000,
                 mileage=0, fuel_type="Бензин", transmission="Автомат",
                 body_type="Кроссовер", color="Серый", engine_volume=2.5,
                 description="Hyundai Tucson — футуристичный дизайн и просторный салон. Гибридная система.",
-                image_url="https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800",
+                image_url="/media/cars/06-hyundai-tucson.jpg",
             ),
             Car(
                 brand="Lexus", model="RX 350", year=2023, price=6_200_000,
                 mileage=5000, fuel_type="Бензин", transmission="Автомат",
                 body_type="Кроссовер", color="Белый перламутр", engine_volume=3.5,
                 description="Lexus RX 350 — роскошный кроссовер с безупречным качеством сборки.",
-                image_url="https://images.unsplash.com/photo-1542362567-b07e54358753?w=800",
+                image_url="/media/cars/07-lexus-rx-350.jpg",
             ),
             Car(
                 brand="Volkswagen", model="Tiguan", year=2024, price=3_500_000,
                 mileage=0, fuel_type="Бензин", transmission="Автомат",
                 body_type="Кроссовер", color="Белый", engine_volume=2.0,
                 description="Volkswagen Tiguan — немецкое качество и практичность. Система 4Motion.",
-                image_url="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800",
+                image_url="/media/cars/08-volkswagen-tiguan.jpg",
             ),
             Car(
                 brand="Mazda", model="CX-5", year=2024, price=2_900_000,
                 mileage=0, fuel_type="Бензин", transmission="Автомат",
                 body_type="Кроссовер", color="Красный", engine_volume=2.5,
                 description="Mazda CX-5 — драйверский кроссовер с технологией SkyActiv и дизайном KODO.",
-                image_url="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800",
+                image_url="/media/cars/09-mazda-cx-5.jpg",
             ),
             Car(
                 brand="Porsche", model="Cayenne", year=2023, price=9_800_000,
                 mileage=3000, fuel_type="Бензин", transmission="Автомат",
                 body_type="Внедорожник", color="Чёрный", engine_volume=3.0,
                 description="Porsche Cayenne — спортивный внедорожник с характером суперкара.",
-                image_url="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800",
+                image_url="/media/cars/10-porsche-cayenne.jpg",
             ),
             Car(
                 brand="Genesis", model="G80", year=2024, price=5_500_000,
                 mileage=0, fuel_type="Бензин", transmission="Автомат",
                 body_type="Седан", color="Тёмно-зелёный", engine_volume=2.5,
                 description="Genesis G80 — корейский люкс с атлетичным дизайном и богатым оснащением.",
-                image_url="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800",
+                image_url="/media/cars/11-genesis-g80.png",
             ),
             Car(
                 brand="Land Rover", model="Range Rover Sport", year=2023, price=11_200_000,
                 mileage=7000, fuel_type="Дизель", transmission="Автомат",
                 body_type="Внедорожник", color="Бронзовый", engine_volume=3.0,
                 description="Range Rover Sport — воплощение роскоши и внедорожных возможностей.",
-                image_url="https://images.unsplash.com/photo-1519245659620-e859806a8d7b?w=800",
+                image_url="/media/cars/12-land-rover-range-rover-sport.jpg",
             ),
         ]
 

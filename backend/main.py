@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 
-from storage import prepare_runtime_storage, uploads_root, uses_turso
+from storage import prepare_runtime_storage, uploads_root
 
 prepare_runtime_storage()
 
@@ -45,11 +45,7 @@ if os.path.isdir(frontend_path):
 
 @app.get("/", tags=["Главная"])
 def root():
-    return {
-        "message": "АвтоГрад API работает",
-        "docs": "/docs",
-        "database": "turso (sqlite)" if uses_turso() else "sqlite",
-    }
+    return {"message": "АвтоГрад API работает", "docs": "/docs"}
 
 
 @app.on_event("startup")

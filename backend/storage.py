@@ -14,10 +14,6 @@ def is_vercel() -> bool:
     return _IS_VERCEL
 
 
-def uses_turso() -> bool:
-    return bool(os.getenv("TURSO_DATABASE_URL", "").strip() and os.getenv("TURSO_AUTH_TOKEN", "").strip())
-
-
 def database_url() -> str:
     if _IS_VERCEL:
         return "sqlite:////tmp/autograd.db"
@@ -37,8 +33,8 @@ def cars_upload_dir() -> Path:
 
 
 def prepare_runtime_storage() -> None:
-    """На Vercel копирует bundled БД в /tmp (только без Turso)."""
-    if uses_turso() or not _IS_VERCEL:
+    """На Vercel копирует bundled БД и демо-фото в /tmp."""
+    if not _IS_VERCEL:
         cars_upload_dir()
         return
 

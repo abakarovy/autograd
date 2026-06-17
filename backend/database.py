@@ -1,14 +1,41 @@
+import os
+
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-from storage import database_url
+from storage import is_vercel, uses_turso
 
-DATABASE_URL = database_url()
+_turso_url = os.getenv("TURSO_DATABASE_URL", "").strip()
+_turso_token = os.getenv("TURSO_AUTH_TOKEN", "").strip()
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    echo=False,
+
+def _create_engine():
+    if uses_turso():
+        url = _turso_url if _turso_url.startswith("libsql://") else f"libsql://{_turso_url}"
+        return create_engine(
+            f"sqlite+{url}?secure=true",
+            connect_args={"auth_token": _turso_token},
+            echo=False,
+        )
+
+    if is_vercel():
+        db_url = "sqlite:////tmp/autograd.db"
+    else:
+        db_url = "sqlite:///./autograd.db"
+
+    return create_engine(
+        db_url,
+        connect_args={"check_same_thread": False},
+        echo=False,
+    )
+
+
+engine = _create_engine()
+
+DATABASE_URL = (
+    "turso"
+    if uses_turso()
+    else ("sqlite-tmp" if is_vercel() else "sqlite-local")
 )
 
 

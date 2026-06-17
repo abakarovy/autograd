@@ -2,8 +2,7 @@ const LOCAL_API = "http://127.0.0.1:8000";
 /** Продакшен FastAPI на Vercel */
 const PRODUCTION_API = "https://autograd-f335.vercel.app";
 
-/** Прямой URL FastAPI — только на сервере Next.js (SSR, API routes). */
-export function getServerApiUrl(): string {
+function resolveApiUrl(): string {
   const fallback =
     process.env.VERCEL || process.env.NODE_ENV === "production"
       ? PRODUCTION_API
@@ -16,13 +15,12 @@ export function getServerApiUrl(): string {
   ).replace(/\/$/, "");
 }
 
-/**
- * URL для fetch из браузера: same-origin прокси (без CORS).
- * На сервере — прямое подключение к backend.
- */
+/** Прямой URL FastAPI для SSR и API routes Next.js. */
+export function getServerApiUrl(): string {
+  return resolveApiUrl();
+}
+
+/** URL для fetch из браузера — напрямую на backend (CORS разрешён). */
 export function getPublicApiUrl(): string {
-  if (typeof window !== "undefined") {
-    return "/api/backend";
-  }
-  return getServerApiUrl();
+  return resolveApiUrl();
 }

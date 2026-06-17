@@ -15,6 +15,9 @@ def is_vercel() -> bool:
 
 
 def database_url() -> str:
+    explicit = os.getenv("DATABASE_URL", "").strip()
+    if explicit:
+        return explicit
     if _IS_VERCEL:
         return "sqlite:////tmp/autograd.db"
     return "sqlite:///./autograd.db"

@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 
-from storage import prepare_runtime_storage, uploads_root
+from storage import prepare_runtime_storage, uploads_root, is_vercel
+import os
 
 prepare_runtime_storage()
 
@@ -51,6 +52,12 @@ def root():
 @app.on_event("startup")
 def seed_demo_data():
     """Заполнение БД демонстрационными данными при первом запуске."""
+    if is_vercel() and not os.getenv("DATABASE_URL", "").strip():
+        print(
+            "WARNING: DATABASE_URL не задан. На Vercel SQLite в /tmp не сохраняет "
+            "изменения между запросами. Подключите PostgreSQL (Neon) и задайте DATABASE_URL."
+        )
+
     from database import SessionLocal
     db = SessionLocal()
     try:

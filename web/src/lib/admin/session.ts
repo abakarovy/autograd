@@ -2,6 +2,20 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 export const ADMIN_COOKIE = "ag_admin";
 
+/** Secure flag for admin cookie — follows HTTPS, not NODE_ENV (HTTP VPS needs secure=false). */
+export function isSecureAdminCookie(req: Request): boolean {
+  const override = process.env.ADMIN_COOKIE_SECURE;
+  if (override === "true") return true;
+  if (override === "false") return false;
+  const forwarded = req.headers.get("x-forwarded-proto");
+  if (forwarded) return forwarded.split(",")[0].trim() === "https";
+  try {
+    return new URL(req.url).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function signAdminSession(): string {
   const secret = process.env.ADMIN_SESSION_SECRET || "dev-only-change-me";
   const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;

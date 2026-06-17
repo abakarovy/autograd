@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ADMIN_COOKIE, signAdminSession } from "@/lib/admin/session";
+import { ADMIN_COOKIE, isSecureAdminCookie, signAdminSession } from "@/lib/admin/session";
 
 const DEFAULT_PASSWORD = "autograd2026";
 
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecureAdminCookie(req),
   });
   return res;
 }

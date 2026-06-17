@@ -5,7 +5,13 @@ export const metadata: Metadata = {
   description: "АвтоГрад: телефон, email, адрес автосалона и режим работы.",
 };
 
-const blocks = [
+type ContactLine = {
+  label: string;
+  value: string;
+  href?: string;
+};
+
+const blocks: { title: string; lines: ContactLine[] }[] = [
   {
     title: "Телефон",
     lines: [

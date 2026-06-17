@@ -1,10 +1,10 @@
 """Загрузка изображений для карточек автомобилей."""
 
-import os
 import uuid
-from pathlib import Path
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
+
+from storage import cars_upload_dir
 
 router = APIRouter(prefix="/upload", tags=["Загрузки"])
 
@@ -15,12 +15,6 @@ ALLOWED_TYPES = {
     "image/gif": ".gif",
 }
 MAX_BYTES = 8 * 1024 * 1024  # 8 МБ
-
-
-def _cars_dir() -> Path:
-    base = Path(__file__).resolve().parent.parent / "uploads" / "cars"
-    base.mkdir(parents=True, exist_ok=True)
-    return base
 
 
 @router.post("/car-photo")
@@ -39,7 +33,7 @@ async def upload_car_photo(file: UploadFile = File(...)):
 
     ext = ALLOWED_TYPES[content_type]
     name = f"{uuid.uuid4().hex}{ext}"
-    dest = _cars_dir() / name
+    dest = cars_upload_dir() / name
 
     dest.write_bytes(data)
 

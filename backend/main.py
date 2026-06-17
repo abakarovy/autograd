@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 
+from storage import prepare_runtime_storage, uploads_root
+
+prepare_runtime_storage()
+
 from database import engine, Base
 from models import Car, Client, Sale
 from routers import cars, clients, sales
@@ -10,9 +14,8 @@ from routers import upload as upload_router
 
 Base.metadata.create_all(bind=engine)
 
-_BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
-_UPLOADS_ROOT = os.path.join(_BACKEND_DIR, "uploads")
-os.makedirs(os.path.join(_UPLOADS_ROOT, "cars"), exist_ok=True)
+_UPLOADS_ROOT = uploads_root()
+os.makedirs(_UPLOADS_ROOT / "cars", exist_ok=True)
 
 app = FastAPI(
     title="АвтоГрад API",
@@ -33,7 +36,7 @@ app.include_router(clients.router)
 app.include_router(sales.router)
 app.include_router(upload_router.router)
 
-app.mount("/media", StaticFiles(directory=_UPLOADS_ROOT), name="media")
+app.mount("/media", StaticFiles(directory=str(_UPLOADS_ROOT)), name="media")
 
 frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend")
 if os.path.isdir(frontend_path):

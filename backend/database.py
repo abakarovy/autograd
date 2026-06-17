@@ -1,7 +1,9 @@
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = "sqlite:///./autograd.db"
+from storage import database_url
+
+DATABASE_URL = database_url()
 
 engine = create_engine(
     DATABASE_URL,
